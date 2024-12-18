@@ -4,8 +4,10 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.BitSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 
 record Point(int x, int y, int dist) {
@@ -18,13 +20,33 @@ public class Main {
 
         BitSet brokenBits = new BitSet();
 
-        reader.lines()
-                .limit(1024)
+        List<Integer> inputBytes = reader.lines()
                 .map((s) -> s.split(","))
-                .map((a) -> Integer.parseInt(a[0]) + 70 * Integer.parseInt(a[1]))
+                .map((a) -> Integer.parseInt(a[0]) + 71 * Integer.parseInt(a[1]))
+                .toList();
+
+        inputBytes.stream()
+                .limit(1024)
                 .forEach(brokenBits::set);
 
+        Integer target = computePath(brokenBits);
+        out.write("Part1: " + target + "\n");
 
+        for (int i = 1024; i < inputBytes.size(); i++) {
+            Integer brokenByte = inputBytes.get(i);
+            brokenBits.set(brokenByte);
+
+            if (computePath(brokenBits) == null) {
+                out.write("Part2: " + brokenByte % 71 + " " + brokenByte / 71);
+                break;
+            }
+        }
+
+        out.close();
+        reader.close();
+    }
+
+    private static Integer computePath(BitSet brokenBits) {
         BitSet visited = new BitSet();
         Queue<Point> queue = new ArrayDeque<>();
 
@@ -37,14 +59,13 @@ public class Main {
             Point c = queue.poll();
 
             if (c.x() == 70 && c.y() == 70) {
-                out.write(c.dist());
-                break;
+                return c.dist();
             }
 
             for (int[] child : directions) {
                 int nextX = c.x() + child[0];
                 int nextY = c.y() + child[1];
-                int next = nextX + 70 * nextY;
+                int next = nextX + 71 * nextY;
 
                 if (nextX < 0 || nextX > 70 || nextY < 0 || nextY > 70 || brokenBits.get(next)) {
                     continue;
@@ -60,9 +81,6 @@ public class Main {
 
         }
 
-        out.write("Missing path");
-
-        out.close();
-        reader.close();
+        return null;
     }
 }
