@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="day18" />
         <module name="day17" />
+        <module name="day19" />
       </profile>
     </annotationProcessing>
   </component>
