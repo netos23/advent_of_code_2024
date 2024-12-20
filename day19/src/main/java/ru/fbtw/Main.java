@@ -51,7 +51,6 @@ public class Main {
             if (offset >= p.length()) {
                 continue;
             }
-            "".hashCode();
 
             int h = 0;
             for (int i = offset, l = 0; i < p.length() && l < maxSize; i++, l++) {
